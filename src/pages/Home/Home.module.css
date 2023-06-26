@@ -1,7 +1,7 @@
 .container {
   text-align: center;
   background-image: url('../../images/background-1920.jpg');
-  background-size: cover;
+  background-size: 'cover';
   background-position: center;
   height: 100vh;
   overflow: hidden;

@@ -2,13 +2,15 @@ import React, { ChangeEvent, ChangeEventHandler, useState } from 'react';
 import s from './Home.module.css';
 import { Box, Button, FormControl, OutlinedInput } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function Home() {
-  const [Name, setName] = useState<string>();
+  const [name, setName] = useState<string>();
 
   const navigate = useNavigate();
   const onStart = () => {
-    navigate('/Game');
+    navigate('/Game', { state: { name } });
+    toast.success(`Welcome to Leadix "${name}"`);
   };
   const handleName: ChangeEventHandler<HTMLInputElement> = (
     e: ChangeEvent<HTMLInputElement>
@@ -38,14 +40,14 @@ function Home() {
         </FormControl>
         <Button
           onClick={onStart}
-          disabled={!Name}
+          disabled={!name}
           sx={{
             color: 'black',
-            bgcolor: Name ? 'lightgreen' : 'lightgray',
+            bgcolor: name ? 'lightgreen' : 'lightgray',
             '&:hover': {
-              bgcolor: Name ? 'green' : 'lightgreen',
+              bgcolor: name ? 'green' : 'lightgreen',
               '@media (hover: none)': {
-                bgcolor: Name ? 'green' : 'lightgray', // Preserve bgcolor on devices without hover support
+                bgcolor: name ? 'green' : 'lightgray',
               },
             },
           }}
