@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import s from "./Game.module.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
@@ -9,13 +9,11 @@ import menGo from "../../images/png/13802-cartoon-boy-walking-cycle.json";
 function Game() {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const [isIconMoved, setIsIconMoved] = useState(false);
   const [isRun, setIsRun] = useState(false);
+  const [isToggle, setisToggle] = useState(false);
   const [x, setX] = useState(340);
   const [y, setY] = useState(320);
   const [xHero, setXHero] = useState(0);
-  // const [counter, setCounter] = useState(0);
-  // const [intervalId, setIntervalId] = useState<NodeJS.Timer | null>(null);
 
   const heroRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -37,26 +35,7 @@ function Game() {
         animation.destroy();
       };
     }
-  }, [isRun, isIconMoved]);
-
-  // if (x === xHero) {
-  // console.log("xHero");
-  console.log("x", x);
-  // }
-
-  // useEffect(() => {
-  //   if (isIconMoved) {
-  //     const id = setInterval(() => {
-  //       setCounter((prevCounter) => prevCounter + 3);
-  //     }, 100);
-  //     setIntervalId(id);
-  //   } else {
-  //     if (intervalId) {
-  //       clearInterval(intervalId);
-  //     }
-  //     setIntervalId(null);
-  //   }
-  // }, [isIconMoved]);
+  }, [isRun]);
 
   const onExit = () => {
     navigate("/");
@@ -67,7 +46,7 @@ function Game() {
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if (isRun) {
+    if (isToggle) {
       const id = setInterval(() => {
         const ssss = containerRef.current?.getBoundingClientRect();
         const aaaa = heroRef.current?.getBoundingClientRect();
@@ -76,7 +55,7 @@ function Game() {
             setIsRun(false);
           }
         }
-      }, 1000);
+      }, 500);
       setIntervalId(id);
     } else {
       if (intervalId) {
@@ -90,24 +69,9 @@ function Game() {
         clearInterval(intervalId);
       }
     };
-  }, [isRun]);
-
-  // setInterval(() => {
-  //   // if (heroRef && containerRef) {
-  //   const ssss = containerRef.current?.getBoundingClientRect();
-  //   const aaaa = heroRef.current?.getBoundingClientRect();
-  //   if (aaaa && ssss) {
-  //     if (Math.abs(Math.round(aaaa.left - ssss.left) - x) <= 5) {
-  //       setIsRun(false);
-  //     }
-  //   }
-
-  //   // setIsRun(false);
-  //   // }
-  // }, 1000);
+  }, [isToggle]);
 
   const handleContainerClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    setIsRun(false);
     const containerRect = containerRef.current?.getBoundingClientRect();
     const heroRect = heroRef.current?.getBoundingClientRect();
 
@@ -119,6 +83,7 @@ function Game() {
       setY(Math.round(event.clientY - containerRect.top));
     }
     setIsRun(true);
+    setisToggle(!isToggle);
   };
 
   return (
@@ -136,6 +101,7 @@ function Game() {
           border: "3px solid green",
           borderRadius: "10px",
           position: "relative",
+          cursor: "pointer",
         }}
         className={s.playField}
         onClick={handleContainerClick}
