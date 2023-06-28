@@ -46,13 +46,15 @@ function Game() {
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if (isToggle) {
+    if (isRun) {
       const id = setInterval(() => {
         const ssss = containerRef.current?.getBoundingClientRect();
         const aaaa = heroRef.current?.getBoundingClientRect();
         if (aaaa && ssss) {
           if (Math.abs(Math.round(aaaa.left - ssss.left) - x) <= 10) {
             setIsRun(false);
+          } else {
+            setIsRun(true);
           }
         }
       }, 500);
@@ -69,7 +71,7 @@ function Game() {
         clearInterval(intervalId);
       }
     };
-  }, [isToggle]);
+  }, [isToggle, isRun]);
 
   const handleContainerClick = (event: React.MouseEvent<HTMLDivElement>) => {
     const containerRect = containerRef.current?.getBoundingClientRect();
