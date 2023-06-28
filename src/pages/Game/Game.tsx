@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
-import s from "./Game.module.css";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Box } from "@mui/material";
-import lottie from "lottie-web";
-import exitGame from "../../images/png/exitGame.png";
-import menGo from "../../images/png/13802-cartoon-boy-walking-cycle.json";
+import React, { useEffect, useRef, useState } from 'react';
+import s from './Game.module.css';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Box } from '@mui/material';
+import lottie from 'lottie-web';
+import exitGame from '../../images/png/exitGame.png';
+import menGo from '../../images/png/13802-cartoon-boy-walking-cycle.json';
+import menGoBag from '../../images/png/withBag.json';
 
 function Game() {
   const { state } = useLocation();
@@ -14,6 +15,7 @@ function Game() {
   const [x, setX] = useState(340);
   const [y, setY] = useState(320);
   const [xHero, setXHero] = useState(0);
+  const [withBag, setWithBag] = useState(false);
 
   const heroRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -22,8 +24,8 @@ function Game() {
     if (heroRef.current) {
       const animation = lottie.loadAnimation({
         container: heroRef.current,
-        animationData: menGo,
-        renderer: "canvas",
+        animationData: withBag ? menGoBag : menGo,
+        renderer: 'canvas',
         loop: isRun,
         autoplay: isRun,
       });
@@ -35,10 +37,10 @@ function Game() {
         animation.destroy();
       };
     }
-  }, [isRun]);
+  }, [isRun, withBag]);
 
   const onExit = () => {
-    navigate("/");
+    navigate('/');
   };
 
   const handleIconClick = () => {};
@@ -74,6 +76,7 @@ function Game() {
   }, [isToggle, isRun]);
 
   const handleContainerClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    setWithBag(false);
     const containerRect = containerRef.current?.getBoundingClientRect();
     const heroRect = heroRef.current?.getBoundingClientRect();
 
@@ -86,6 +89,9 @@ function Game() {
     }
     setIsRun(true);
     setisToggle(!isToggle);
+    setTimeout(() => {
+      setWithBag(true);
+    }, 2000);
   };
 
   return (
@@ -98,12 +104,12 @@ function Game() {
       <Box
         marginTop={8}
         sx={{
-          width: "680px",
-          height: "680px",
-          border: "3px solid green",
-          borderRadius: "10px",
-          position: "relative",
-          cursor: "pointer",
+          width: '680px',
+          height: '680px',
+          border: '3px solid green',
+          borderRadius: '10px',
+          position: 'relative',
+          cursor: 'pointer',
         }}
         className={s.playField}
         onClick={handleContainerClick}
@@ -112,20 +118,20 @@ function Game() {
         <button onClick={handleIconClick} className={s.customButton}>
           <Box
             sx={{
-              position: "absolute",
+              position: 'absolute',
               top: `${y}px`,
               left: `${x}px`,
-              transition: "all 3s linear",
-              transform: xHero < x ? "scaleX(1)" : "scaleX(-1)",
-              transitionProperty: "all, transform",
-              transitionDuration: "3s, 0s",
+              transition: 'all 3s linear',
+              transform: xHero < x ? 'scaleX(1)' : 'scaleX(-1)',
+              transitionProperty: 'all, transform',
+              transitionDuration: '3s, 0s',
             }}
           >
             <Box
               sx={{
                 height: 80,
                 width: 50,
-                marginTop: "-70px",
+                marginTop: '-70px',
               }}
               ref={heroRef}
             />

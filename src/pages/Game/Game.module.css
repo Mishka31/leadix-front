@@ -35,26 +35,6 @@
 .exitButton:hover {
   transform: scale(1.1);
 }
-.verticalNavigationLeft {
-  position: absolute;
-  background: linear-gradient(to right, rgba(27, 27, 27), rgba(27, 27, 27, 0));
-  backdrop-filter: blur(10px);
-  left: 0;
-  width: 65px;
-  height: 100%;
-  opacity: 0.9;
-  z-index: 1;
-}
-.verticalNavigationRight {
-  position: absolute;
-  background: linear-gradient(to left, rgba(27, 27, 27, 0.8), rgba(27, 27, 27, 0));
-  backdrop-filter: blur(10px);
-  right: 0;
-  width: 65px;
-  height: 100%;
-  opacity: 0.9;
-  z-index: 1;
-}
 
 .customButton {
   background: none;
