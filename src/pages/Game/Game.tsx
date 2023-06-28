@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import s from "./Game.module.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
@@ -11,13 +11,19 @@ function Game() {
   const navigate = useNavigate();
   const [isIconMoved, setIsIconMoved] = useState(false);
   const [isRun, setIsRun] = useState(false);
+  const [x, setX] = useState(340);
+  const [y, setY] = useState(320);
+  const [xHero, setXHero] = useState(0);
+  // const [counter, setCounter] = useState(0);
+  // const [intervalId, setIntervalId] = useState<NodeJS.Timer | null>(null);
 
-  const animationContainer = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (animationContainer.current) {
+    if (heroRef.current) {
       const animation = lottie.loadAnimation({
-        container: animationContainer.current,
+        container: heroRef.current,
         animationData: menGo,
         renderer: "canvas",
         loop: isRun,
@@ -33,17 +39,86 @@ function Game() {
     }
   }, [isRun, isIconMoved]);
 
+  // if (x === xHero) {
+  // console.log("xHero");
+  console.log("x", x);
+  // }
+
+  // useEffect(() => {
+  //   if (isIconMoved) {
+  //     const id = setInterval(() => {
+  //       setCounter((prevCounter) => prevCounter + 3);
+  //     }, 100);
+  //     setIntervalId(id);
+  //   } else {
+  //     if (intervalId) {
+  //       clearInterval(intervalId);
+  //     }
+  //     setIntervalId(null);
+  //   }
+  // }, [isIconMoved]);
+
   const onExit = () => {
     navigate("/");
   };
 
-  const handleIconClick = () => {
-    setIsIconMoved(!isIconMoved);
-    setIsRun(true);
+  const handleIconClick = () => {};
 
-    setTimeout(() => {
-      setIsRun(false);
-    }, 6000); // Длительность анимации в миллисекундах
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (isRun) {
+      const id = setInterval(() => {
+        const ssss = containerRef.current?.getBoundingClientRect();
+        const aaaa = heroRef.current?.getBoundingClientRect();
+        if (aaaa && ssss) {
+          if (Math.abs(Math.round(aaaa.left - ssss.left) - x) <= 10) {
+            setIsRun(false);
+          }
+        }
+      }, 1000);
+      setIntervalId(id);
+    } else {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+      setIntervalId(null);
+    }
+
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [isRun]);
+
+  // setInterval(() => {
+  //   // if (heroRef && containerRef) {
+  //   const ssss = containerRef.current?.getBoundingClientRect();
+  //   const aaaa = heroRef.current?.getBoundingClientRect();
+  //   if (aaaa && ssss) {
+  //     if (Math.abs(Math.round(aaaa.left - ssss.left) - x) <= 5) {
+  //       setIsRun(false);
+  //     }
+  //   }
+
+  //   // setIsRun(false);
+  //   // }
+  // }, 1000);
+
+  const handleContainerClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    setIsRun(false);
+    const containerRect = containerRef.current?.getBoundingClientRect();
+    const heroRect = heroRef.current?.getBoundingClientRect();
+
+    if (containerRect && heroRect) {
+      const xHeroOnContainer = Math.round(heroRect.left - containerRect.left);
+      setXHero(xHeroOnContainer);
+
+      setX(Math.round(event.clientX - containerRect.left) - 30);
+      setY(Math.round(event.clientY - containerRect.top));
+    }
+    setIsRun(true);
   };
 
   return (
@@ -63,23 +138,28 @@ function Game() {
           position: "relative",
         }}
         className={s.playField}
+        onClick={handleContainerClick}
+        ref={containerRef}
       >
         <button onClick={handleIconClick} className={s.customButton}>
           <Box
             sx={{
               position: "absolute",
-              top: "40%",
-              left: isIconMoved ? "calc(100% - 50px)" : 0,
-              transition: "left 6s linear", // Длительность и анимационная функция
-              transform: isIconMoved ? "scaleX(1)" : "scaleX(-1)",
+              top: `${y}px`,
+              left: `${x}px`,
+              transition: "all 3s linear",
+              transform: xHero < x ? "scaleX(1)" : "scaleX(-1)",
+              transitionProperty: "all, transform",
+              transitionDuration: "3s, 0s",
             }}
           >
             <Box
               sx={{
                 height: 80,
                 width: 50,
+                marginTop: "-70px",
               }}
-              ref={animationContainer}
+              ref={heroRef}
             />
           </Box>
         </button>
