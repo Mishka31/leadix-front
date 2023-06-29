@@ -6,6 +6,7 @@ import lottie from 'lottie-web';
 import exitGame from '../../images/png/exitGame.png';
 import menGo from '../../images/png/13802-cartoon-boy-walking-cycle.json';
 import menGoBag from '../../images/png/withBag.json';
+import menGoWood from '../../images/png/withWood.json';
 
 function Game() {
   const { state } = useLocation();
@@ -24,7 +25,7 @@ function Game() {
     if (heroRef.current) {
       const animation = lottie.loadAnimation({
         container: heroRef.current,
-        animationData: withBag ? menGoBag : menGo,
+        animationData: withBag ? menGoWood : menGo,
         renderer: 'canvas',
         loop: isRun,
         autoplay: isRun,
@@ -130,7 +131,7 @@ function Game() {
             <Box
               sx={{
                 height: 80,
-                width: 50,
+                width: withBag ? 70 : 50,
                 marginTop: '-70px',
               }}
               ref={heroRef}
