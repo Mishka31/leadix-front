@@ -7,6 +7,9 @@ import exitGame from '../../images/png/exitGame.png';
 import menGo from '../../images/png/13802-cartoon-boy-walking-cycle.json';
 import menGoBag from '../../images/png/withBag.json';
 import menGoWood from '../../images/png/withWood.json';
+import boyWithAK47 from '../../images/png/boyWithAK47.json';
+import { Howl, HowlOptions } from 'howler';
+import { createAudio } from './audioUtils';
 
 function Game() {
   const { state } = useLocation();
@@ -20,18 +23,20 @@ function Game() {
 
   const heroRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  createAudio('');
 
   useEffect(() => {
     if (heroRef.current) {
       const animation = lottie.loadAnimation({
         container: heroRef.current,
-        animationData: withBag ? menGoWood : menGo,
+        animationData: withBag ? boyWithAK47 : menGo,
+        // animationData: boyWithAK47,
         renderer: 'canvas',
         loop: isRun,
         autoplay: isRun,
       });
 
-      animation.setSpeed(1.5);
+      animation.setSpeed(1.3);
       // animation.setDirection(isIconMoved ? 1 : -1); // revers animation
 
       return () => {
